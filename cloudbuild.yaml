@@ -1,0 +1,27 @@
+steps:
+  # Install Node.js and npm
+  - name: 'node:16.16.0'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+          npm install
+
+  # Build the React app
+  - name: 'node:16.16.0'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+          npm run build
+
+  # Copy build files to the instance
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'compute'
+      - 'scp'
+      - '--recurse'
+      - 'build/'
+      - 'instance-group-1-k9gk:/var/www/html/'
+      - '--zone'
+      - 'southamerica-east1-b'
